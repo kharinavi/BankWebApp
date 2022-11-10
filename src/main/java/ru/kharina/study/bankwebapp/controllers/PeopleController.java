@@ -3,10 +3,13 @@ package ru.kharina.study.bankwebapp.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.kharina.study.bankwebapp.dao.PersonDAO;
 import ru.kharina.study.bankwebapp.models.Employee;
 import ru.kharina.study.bankwebapp.models.Manager;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/people")
@@ -56,13 +59,19 @@ public class PeopleController {
     }
 
     @PostMapping("/manager/create")
-    public String createM(@ModelAttribute("person") Manager person) {
+    public String createM(@ModelAttribute("person") @Valid Manager person,
+                          BindingResult bindingResult) {
+        if (bindingResult.hasErrors())
+            return "people/manager/new";
         personDAO.saveM(person);
         return "redirect:/people/manager/list";
     }
 
     @PostMapping("/employee/create")
-    public String createE(@ModelAttribute("person") Employee person) {
+    public String createE(@ModelAttribute("person") @Valid Employee person,
+                          BindingResult bindingResult) {
+        if (bindingResult.hasErrors())
+            return "people/employee/new";
         personDAO.saveE(person);
         return "redirect:/people/employee/list";
     }
@@ -85,15 +94,21 @@ public class PeopleController {
     }
 
     @PatchMapping("/manager/{id}")
-    public String updateM(@ModelAttribute("person") Manager person,
+    public String updateM(@ModelAttribute("person") @Valid Manager person,
+                         BindingResult bindingResult,
                          @PathVariable("id") int id) {
+        if (bindingResult.hasErrors())
+            return "people/manager/edit";
         personDAO.updateM(id, person);
         return "redirect:/people/manager/list";
     }
 
     @PatchMapping("/employee/{id}")
-    public String updateE(@ModelAttribute("person") Employee person,
+    public String updateE(@ModelAttribute("person") @Valid Employee person,
+                          BindingResult bindingResult,
                           @PathVariable("id") int id) {
+        if (bindingResult.hasErrors())
+            return "people/employee/edit";
         personDAO.updateE(id, person);
         return "redirect:/people/employee/list";
     }

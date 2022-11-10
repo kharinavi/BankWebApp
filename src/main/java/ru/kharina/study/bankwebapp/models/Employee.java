@@ -1,5 +1,7 @@
 package ru.kharina.study.bankwebapp.models;
 
+import javax.validation.constraints.NotEmpty;
+
 public class Employee extends Person{
     private String specialization = "";
     private String manager = "";
